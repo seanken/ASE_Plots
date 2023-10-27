@@ -1,0 +1,1 @@
+ggplot(dat,aes(x=Method,y=Len,fill=Method))+geom_violin(draw_quantiles=.5)+scale_y_log10()+ylab("Read Length (bp)")+xlab("")+theme(legend.position="none")+annotation_logticks(sides = "l")+geom_text(aes(label=MedLen,y=Median,x=Method),data=tab,nudge_y=.05)

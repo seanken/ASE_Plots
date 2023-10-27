@@ -1,0 +1,11 @@
+source("/stanley/levin_dr/ssimmons/SingleCell3/load_Seurat.R")
+library(ggplot2)
+dat=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/TransEQTL/expression.1perc.RDS")
+meta=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/TransEQTL/meta.RDS")
+seur=dir10X(dat=dat,minGenes=0,regress="nFeature_RNA")
+seur=RunUMAP(seur,dims=1:20)
+seur@meta.data["CellType"]=meta[,"MajorCellTypes"]
+p=UMAPPlot(seur,label=T,group.by="CellType")
+saveRDS(p,"UMAP.RDS")
+ggsave("UMAP.pdf",p,width=14)
+saveRDS(seur,"seur.RDS")
