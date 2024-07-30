@@ -7,6 +7,7 @@ library(stringi)
 library(dplyr)
 library(tidyr)
 library(DropletUtils)
+library(qs)
 
 qc=readRDS("../qc.picked.genes.RDS")
 genes=qc[qc[,"Picked"],"ID"]
@@ -36,6 +37,8 @@ dat=data.frame(dat)
 
 dat["Type"]="In Chosen Gene"
 dat[dat[,"In"]==F,"Type"]="Not In Chosen Gene"
+
+qsave(dat,"dat.qs")
 
 p=ggplot(dat,aes(x=Type,y=reads,fill=In))+geom_violin(scale="width")+scale_y_log10()+xlab("")+ylab("Reads per UMI")+theme(legend.position="none")
 ggsave("Reads.per.UMI.pdf",p)

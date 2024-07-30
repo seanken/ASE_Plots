@@ -64,4 +64,11 @@ ret=lapply(types,function(celltype)
     return(fils2)
 })
 
+names(ret)=types
+
 saveRDS(ret,"out.by.type.RDS")
+
+for(i in names(ret)){ret[[i]]["CellType"]=i}
+fils=do.call(rbind,ret)
+p=ggplot(fils,aes(x=len,y=nSig,fill=samp))+geom_bar(position="dodge",stat="identity")+ylab("Number Genes with Sig AI")+xlab("Length of Read 2 (bp)")+theme(legend.title=element_blank())
+ggsave("Trim.Reads.SigGenes.CellType.pdf",p,width=14,height=10)

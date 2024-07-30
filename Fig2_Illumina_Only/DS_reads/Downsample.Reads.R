@@ -64,6 +64,6 @@ fils["nSig"]=apply(fils,1,function(x){
 })
 
 
-
+saveRDS(fils,"fils.RDS")
 p=ggplot(fils,aes(x=NumReads,y=nSig,color=samp))+geom_point()+geom_line()+ylab("Number Genes with Significant AI")+xlab("Number Sequenced Reads (Illumina)")+theme(legend.title=element_blank())
 ggsave("Downsample.Reads.SigGenes.pdf",p)

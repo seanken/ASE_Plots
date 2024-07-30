@@ -1,0 +1,1 @@
+ggplot(tab,aes(x=CellType,y=Tot))+geom_bar(aes(fill=Type),stat="identity",position="dodge")+coord_flip()+ylab("Number SNP/Gene pairs with allelic imbalance")+xlab("")+labs(fill="")+geom_text(aes(x=CellType,y=Max+2.5,label=NiceProp),data=tab2)

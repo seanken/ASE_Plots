@@ -7,12 +7,13 @@ library(purrr)
 library(stringi)
 library(dplyr)
 library(tidyr)
-
+library(qs)
 
 
 peaks=read.table("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/Sierra/MergeDS/merged.peaks.txt",header=T)
 
-meta=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/meta.with.files.and.Sierra.RDS")
+#meta=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/meta.with.files.and.Sierra.RDS")
+meta=qread("/stanley/levin_asap_storage/ssimmons/ClemensUpdated/meta.with.Sierra.STARv2.8.qs")
 tab=readRDS("../GTEx/celltype.interacting.eQTLs.SuppTab8.RDS")
 head(meta)
 meta=meta[meta$MajorCellTypes=="GLU_Neurons",]
@@ -46,14 +47,14 @@ snps=tab[,"SNP_name"]
 genes=tab[,"polyA_ID"]
 genes=gsub("-","_",gsub(":","_",genes,fixed=T),fixed=T)
 
-if(reload)
-{
-    dat=GetSNPs(meta=meta,genes=genes,snp_list=snps,samp="batchSamp",snp_col="SNP_Full",cbc_col="CBC",cond="case",cellType="MajorCellTypes",bulk=T,all_col="Allele_Sierra")
-    saveRDS(dat,"counts.pseudo.RDS")
-}
-else{
-    dat=readRDS("counts.pseudo.RDS")
-}
+#if(reload)
+#{
+dat=GetSNPs(meta=meta,genes=genes,snp_list=snps,samp="batchSamp",snp_col="SNP",cbc_col="CBC",cond="case",cellType="MajorCellTypes",bulk=T,all_col="Allele_Sierra")
+saveRDS(dat,"counts.pseudo.RDS")
+#}
+#else{
+#dat=readRDS("counts.pseudo.RDS")
+#}
 
 samps=unique(dat$Sample)
 celltypes=unique(dat$CellType)

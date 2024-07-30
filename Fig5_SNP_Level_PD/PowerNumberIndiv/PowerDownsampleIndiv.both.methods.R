@@ -4,11 +4,15 @@ library(ggplot2)
 library(cowplot)
 theme_set(theme_cowplot())
 library(purrr)
+library(qs)
 
 reload=FALSE
 
-meta=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/meta.with.files.and.Sierra.RDS")
-dat=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/snps.allele.counts.table.full.RDS")
+
+meta=qread('/stanley/levin_asap_storage/ssimmons/ClemensUpdated/meta.with.ASEInfo.qs')
+dat=readRDS("../GTEx/counts.pseudo.RDS")
+#meta=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/meta.with.files.and.Sierra.RDS")
+#dat=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/snps.allele.counts.table.full.RDS")
 
 if(reload)
 {
@@ -45,7 +49,7 @@ out1=do.call(rbind,out)
 
 
 
-dat=readRDS("counts.per.cell.RDS")
+dat=readRDS("../GTEx/counts.per.cell.RDS")
 if(reload)
 {
     genes=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/genes.all.RDS")

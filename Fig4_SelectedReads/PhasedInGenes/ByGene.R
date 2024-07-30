@@ -35,5 +35,6 @@ out["Type"]=map_chr(out[,"Test"],function(x) strsplit(x,"_")[[1]][2])
 
 out=out[,c("V2","Tot","Sample","Type")]
 out<-out %>% spread(Type,Tot,fill=0) %>% as.data.frame()
+saveRDS(out,"out.for.bygene.RDS")
 p= ggplot(out,aes(x=hyb,y=nohyb,color=Sample))+geom_point()+geom_abline(slope=1,intercept=0,linetype="dotted")+coord_flip()+xlab("Number Phased UMI With Selection")+ylab("Number Phased UMI No Selection")+scale_x_log10()+scale_y_log10()
 ggsave("PerGene.pd",p)

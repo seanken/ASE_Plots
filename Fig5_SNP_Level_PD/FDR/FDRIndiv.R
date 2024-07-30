@@ -4,10 +4,12 @@ library(ggplot2)
 library(cowplot)
 theme_set(theme_cowplot())
 library(purrr)
+library(qs)
 
 reload=FALSE
 
-meta=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/meta.with.files.and.Sierra.RDS")
+#meta=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/meta.with.files.and.Sierra.RDS")
+meta=qread('/stanley/levin_asap_storage/ssimmons/ClemensUpdated/meta.with.ASEInfo.qs')
 #dat=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/snps.allele.counts.table.full.RDS")
 dat=readRDS("../GTEx/counts.pseudo.RDS")
 #if(reload)

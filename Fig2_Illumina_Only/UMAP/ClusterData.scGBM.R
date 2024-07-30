@@ -16,7 +16,8 @@ source("/stanley/levin_dr/ssimmons/SingleCell3/SharedVariable.v2.R")
 print("Cluster")
 seur<-CreateSeuratObject(dat,"Seurat",min.features=250)
 seur<-NormalizeData(seur,normalization.method="LogNormalize",scale.factor=10000)
-seur=Run_scGBM(seur,numDims=20,nCells=15000,downstream=T,assay="RNA",batch="orig.ident")
+seur<-SharedVariable(seur,x.low.cutoff=.1,x.high.cutoff=.5,minNum=0,batch="orig.ident",minCells=10)
+seur=Run_scGBM(seur,numDims=20,batch="orig.ident")
 
 
 print("Next")
@@ -39,9 +40,15 @@ p=UMAPPlot(seur,label=T,group.by="orig.ident")
 ggsave("UMAP.sample.scGBM.pdf",p,width=14,height=10)
 
 
+tab=qread("CT.qs")
+
+seur@meta.data["CellType"]=tab[as.numeric(as.character(seur@meta.data[,"seurat_clusters"]))+1,"CellType"]
+
+p=UMAPPlot(seur,label=T,group.by="CellType")
+ggsave("UMAP.sample.celltype.pdf",p,width=14,height=10)
 qsave(seur,"seur.GBM.qs")
-
-
+seur=subset(seur,CellType!="Doublet")
+qsave(seur,"seur.GBM.qs")
 #print("Run Azimuth")
 #source("/stanley/levin_diamond/UpdatedTerra/Results/Azimuth.R")
 #meta=RunAzimuth(seur,ref)

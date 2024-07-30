@@ -8,13 +8,16 @@
 #$ -e ErrFile/err.err
 #$ -o ErrFile/log.out
 #$ -l os=RedHat7
-#$ -l h_rt=40:00:00
+#$ -l h_rt=400:00:00
+
 
 source /broad/software/scripts/useuse
 
 use UGER
 source ~/ForPyth.sh
 
-conda activate AlleleDownstream2 
+#conda activate Milo 
+conda activate AlleleDownstream2
 
-Rscript FDRIndiv.R
+#Rscript CompareDAESC.only.R $SGE_TASK_ID
+Rscript CompareDAESC.R

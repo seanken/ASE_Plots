@@ -1,0 +1,1 @@
+ggplot(tab,aes(x=NiceName,y=Percent,color=NiceName))+geom_point()+facet_wrap(~Error,ncol=3)+xlab("Method")+ylab("Number per base matching the reference")+theme(legend.position="none")+theme(axis.text.x = element_text(angle = 45, hjust = 1))

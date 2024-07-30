@@ -54,6 +54,6 @@ fils["len"]=factor(fils[,"len"],c(55,80,130,180))
 p=ggplot(fils,aes(x=len,y=percPhase,fill=samp))+geom_bar(position="dodge",stat="identity")+ylab("Percent of UMI that are Phased")+xlab("Length of Read 2 (bp)")+theme(legend.title=element_blank())
 ggsave("Trim.Reads.PercentPhasedUMI.pdf",p)
 
-
+fils["len"]=factor(fils[,"len"],c(55,80,130,180))
 p=ggplot(fils,aes(x=len,y=nSig,fill=samp))+geom_bar(position="dodge",stat="identity")+ylab("Number Genes with Sig AI")+xlab("Length of Read 2 (bp)")+theme(legend.title=element_blank())
 ggsave("Trim.Reads.SigGenes.pdf",p)

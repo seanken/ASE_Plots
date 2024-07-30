@@ -8,7 +8,7 @@
 #$ -e ErrFile/err.err
 #$ -o ErrFile/log.out
 #$ -l os=RedHat7
-#$ -l h_rt=40:00:00
+#$ -l h_rt=140:00:00
 
 source /broad/software/scripts/useuse
 

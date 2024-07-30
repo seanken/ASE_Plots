@@ -44,12 +44,8 @@ ASE_ill=apply(fils,1,function(x){
 })
 
 #seur=readRDS("../DSReads/seur.MAS.RDS")
-library(qs);
 
-seur=qread("../DSReads/seur.MAS.qs")
-#fils["fil_MAS"]=c("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/LongRead/Jan5Analysis/LongRead/samp_new_2/output/AlleleCounts/counts.txt","/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/LongRead/Jan5Analysis/LongRead/samp_new_1/output/AlleleCounts/counts.txt")
-fils["fil_MAS"]=c("/broad/hptmp/ssimmons/QTL/MASSeq/Revio/samp_revio_2/output/AlleleCounts/counts.txt","/broad/hptmp/ssimmons/QTL/MASSeq/Revio/samp_revio_1/output/AlleleCounts/counts.txt")
-
+fils["fil_MAS"]=c("/stanley/levin_asap_storage/612-eqtl/DS_ForPaper/GTExData/NoIntrons/samp_nointron_YJ89_130/output/AlleleCounts/counts.txt","/stanley/levin_asap_storage/612-eqtl/DS_ForPaper/GTExData/NoIntrons/samp_nointron_Z93S_130/output/AlleleCounts/counts.txt")
 
 print("Perform ASE testing MAS-Seq")
 ASE_MAS=apply(fils,1,function(x){
@@ -82,5 +78,5 @@ comb2["Name"]=fils[2,"samp"]
 comb=rbind(comb1,comb2)
 saveRDS(comb,"comb.RDS")
 comb=comb[!is.na(comb$padj.x) & !is.na(comb$padj.y),]
-p=ggplot(comb[comb$padj.x<.05 | comb$padj.y<.05,],aes(x=Estimate.x,y=Estimate.y,color=Name))+geom_point()+xlab("Effect size Illumina")+ylab("Effect size MAS-Seq")+geom_vline(xintercept=0,linetype="dotted")+geom_hline(yintercept=0,linetype="dotted")
+p=ggplot(comb[comb$padj.x<.05 | comb$padj.y<.05,],aes(x=Estimate.x,y=Estimate.y,color=Name))+geom_point()+xlab("Effect size with introns")+ylab("Effect size no introns")+geom_vline(xintercept=0,linetype="dotted")+geom_hline(yintercept=0,linetype="dotted")
 ggsave("Compare.pdf",p)

@@ -7,54 +7,38 @@ library(purrr)
 library(stringi)
 library(dplyr)
 library(tidyr)
+library(qs)
 
-reload=FALSE
 
-meta=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/meta.with.files.and.Sierra.RDS")
+reload=T
+
+meta=qread('/stanley/levin_asap_storage/ssimmons/ClemensUpdated/meta.with.ASEInfo.qs')
+#meta=readRDS("/stanley/levin_asap_storage/612-eqtl/SingleNuc_data/UpdatedAIData/RunNewData/DataFromClemens/meta.with.files.and.Sierra.RDS")
 tab=readRDS("celltype.interacting.eQTLs.SuppTab8.RDS")
 head(meta)
 meta=meta[meta$MajorCellTypes=="GLU_Neurons",]
-tab=tab[tab$"Excitatory.BH-FDR"<.05,]
-genes=tab[,2]
+# tab=tab[tab$"Excitatory.BH-FDR"<.05,]
+# genes=tab[,2]
 
-beta=tab[,"Excitatory.interaction.beta"]
-tab["All2"]=map_chr(tab[,"SNP"],function(x)strsplit(x,"_")[[1]][2])
-beta[tab$All2!=tab$Allele.assessed]=-beta[tab$All2!=tab$Allele.assessed]
-snps_dirty=map_chr(tab[,3],function(x){s=strsplit(x,":")[[1]];chrom=s[1];pos=s[2];vals=s[4];vals=sub("_",":",vals);paste(chrom,pos,vals,sep=":")})
-snps_dirty2=map_chr(tab[,3],function(x){s=strsplit(x,":")[[1]];chrom=s[1];pos=s[2];vals=s[4];vals=sub("_",":",vals);paste(chrom,pos,stri_reverse(vals),sep=":")})
-snps_all=system("zcat /stanley/levin_asap_storage/612-eqtl/GenotypeData/Clean_vcf/Combined/comb_new.no.chr.vcf.gz | awk '{print $3}'",intern=T)
-vals=snps_dirty %in% snps_all
-snps=map_chr(1:length(snps_dirty),function(x){if(vals[x]){snps_dirty[x];}else{snps_dirty2[x]}})
-beta=map_dbl(1:length(snps_dirty),function(x){if(vals[x]){beta[x];}else{-beta[x]}})
-vals=snps %in% snps_all
-snps=snps[vals]
-genes=genes[vals]
-beta=beta[vals]
-tab=data.frame(SNP_name=snps,Gene=genes,beta=beta)
-tab<-tab %>% unite(SNP,Gene,SNP_name,remove=F,sep="_")
-tab_ie=tab
+# beta=tab[,"Excitatory.interaction.beta"]
+# tab["All2"]=map_chr(tab[,"SNP"],function(x)strsplit(x,"_")[[1]][2])
+# beta[tab$All2!=tab$Allele.assessed]=-beta[tab$All2!=tab$Allele.assessed]
+# snps_dirty=map_chr(tab[,3],function(x){s=strsplit(x,":")[[1]];chrom=s[1];pos=s[2];vals=s[4];vals=sub("_",":",vals);paste(chrom,pos,vals,sep=":")})
+# snps_dirty2=map_chr(tab[,3],function(x){s=strsplit(x,":")[[1]];chrom=s[1];pos=s[2];vals=s[4];vals=sub("_",":",vals);paste(chrom,pos,stri_reverse(vals),sep=":")})
+# snps_all=system("zcat /stanley/levin_asap_storage/612-eqtl/GenotypeData/Clean_vcf/Combined/comb_new.no.chr.vcf.gz | awk '{print $3}'",intern=T)
+# vals=snps_dirty %in% snps_all
+# snps=map_chr(1:length(snps_dirty),function(x){if(vals[x]){snps_dirty[x];}else{snps_dirty2[x]}})
+# beta=map_dbl(1:length(snps_dirty),function(x){if(vals[x]){beta[x];}else{-beta[x]}})
+# vals=snps %in% snps_all
+# snps=snps[vals]
+# genes=genes[vals]
+# beta=beta[vals]
+# tab=data.frame(SNP_name=snps,Gene=genes,beta=beta)
+# tab<-tab %>% unite(SNP,Gene,SNP_name,remove=F,sep="_")
+# tab_ie=tab
 
 
-tab=readRDS("ciseQTLs.SuppTab2.sheet7.RDS")
-tab=tab[2:dim(tab)[1],]
-genes=tab[,5]
-beta=tab[,15]
-beta=as.numeric(beta)
-tab["All2"]=map_chr(tab[,6],function(x)strsplit(x,"_")[[1]][2])
-beta[tab$All2!=tab[,10]]=-beta[tab$All2!=tab[,10]]
 
-snps_dirty=map_chr(tab[,6],function(x){s=strsplit(x,":")[[1]];chrom=s[1];pos=s[2];vals=s[4];vals=sub("_",":",vals);paste(chrom,pos,vals,sep=":")})
-snps_dirty2=map_chr(tab[,6],function(x){s=strsplit(x,":")[[1]];chrom=s[1];pos=s[2];vals=s[4];vals=sub("_",":",vals);paste(chrom,pos,stri_reverse(vals),sep=":")})
-vals=snps_dirty %in% snps_all
-snps=map_chr(1:length(snps_dirty),function(x){if(vals[x]){snps_dirty[x];}else{snps_dirty2[x]}})
-beta=map_dbl(1:length(snps_dirty),function(x){if(vals[x]){beta[x];}else{-beta[x]}})
-vals=snps %in% snps_all
-snps=snps[vals]
-genes=genes[vals]
-beta=beta[vals]
-tab=data.frame(SNP_name=snps,Gene=genes,beta=beta)
-tab<-tab %>% unite(SNP,Gene,SNP_name,remove=F,sep="_")
-tab_cis=tab
 dat=NULL
 
 
@@ -62,8 +46,8 @@ dat=NULL
 
 #if(reload)
 #{
-#    dat=GetSNPs(meta=meta,genes=genes,snp_list=snps,samp="batchSamp",snp_col="SNP_Full",cbc_col="CBC",cond="case",cellType="MajorCellTypes",bulk=T)
-#    saveRDS(dat,"counts.pseudo.RDS")
+#dat=GetSNPs(meta=meta,genes=genes,snp_list=snps,samp="batchSamp",snp_col="SNP",cbc_col="CBC",cond="case",cellType="MajorCellTypes",bulk=T)
+#saveRDS(dat,"counts.pseudo.RDS")
 #}
 #else{
 dat=readRDS("counts.pseudo.RDS")
@@ -72,12 +56,15 @@ dat=readRDS("counts.pseudo.RDS")
 samps=unique(dat$Sample)
 celltypes=unique(dat$CellType)
 celltypes=celltypes[celltypes!="Unknown_Immune_Cells"]
-out=map(rep((2:10)*9-1,1),function(x){
+print("DE Start!")
+out=map(c(91,rep((2:10)*9-1,1)),function(x){
+    print("New Rep")
     print(x)
     set.seed(x)
     samps_rand=sample(samps,x)
     tab=dat[dat$Sample %in% samps_rand,]
     vals=map(celltypes,function(y){
+        print("Cell Type")
         print(y)
         tmp=tab[tab$CellType==y,]
         mrk=tryCatch({TestSNP_aod(tmp,minCount = 10, minSamp = 5)},error=function(cond){print("Yuck!");return(NULL)})
@@ -92,7 +79,7 @@ out=map(rep((2:10)*9-1,1),function(x){
 })
 
 
-
+print("DE Done!")
 
 out1=do.call(rbind,out)
 out=out1
@@ -106,12 +93,12 @@ ggsave("Corr.bulk.meta.vs.ai.pdf",p,width=14)
 
 
 saveRDS(out1,"AI.pseudo.RDS")
-
-dat=NULL
+print("Start mixed")
+#dat=NULL
 #if(reload)
 #{
-#    dat=GetSNPs(meta=meta,genes=genes,snp_list=snps,samp="batchSamp",snp_col="SNP_Full",cbc_col="CBC",cond="case",cellType="MajorCellTypes",bulk=F)
-#    sveRDS(dat,"counts.cell.RDS")
+#dat=GetSNPs(meta=meta,genes=genes,snp_list=snps,samp="batchSamp",snp_col="SNP",cbc_col="CBC",cond="case",cellType="MajorCellTypes",bulk=F)
+#saveRDS(dat,"counts.cell.RDS")
 #}
 #else{
 dat=readRDS("counts.cell.RDS")
@@ -119,7 +106,8 @@ dat=readRDS("counts.cell.RDS")
 samps=unique(dat$Sample)
 celltypes=unique(dat$CellType)
 celltypes=celltypes[celltypes!="Unknown_Immune_Cells"]
-out=map(rev(rep((2:10)*9-1,1)),function(x){
+print(celltypes)
+out=map(c(91,rev(rep((2:10)*9-1,1))),function(x){
     print(x)
     set.seed(x)
     samps_rand=sample(samps,x)
@@ -154,6 +142,6 @@ ggsave("NumberSig.vs.NumberIndiv.pdf",p)
 saveRDS(out,"DE.results.RDS")
 
 #out=out[out$DS==89,]
-comb=inner_join(out[out$DS==89,],tab_ie)
+comb=inner_join(out[out$DS==91,],tab_ie)
 p=ggplot(comb[order(comb$padj,decreasing=T),],aes(x=beta,y=Estimate,color=padj<.05))+geom_point()+scale_color_manual(values=c("grey","red"))+geom_hline(yintercept=0,linetype="dotted")+geom_vline(xintercept=0,linetype="dotted")+ylab("Effect Size Single Nucleus Allelic Imbalance")+xlab("Bulk eQTL exctiatory neuron interaction coefficient")+facet_wrap(~Type)
 ggsave("Corr.bulk.interaction.vs.ai.both.pdf",p,width=14,height=5)
